@@ -1,0 +1,87 @@
+@layer utilities {
+    /* ─── Glass morphism ─────────────────────────────────── */
+    .glass {
+        @apply bg-white/80 backdrop-blur-md border border-white/30 shadow-lg;
+    }
+
+    .dark .glass {
+        @apply bg-gray-900/80 border-white/10;
+    }
+
+    .glass-card {
+        @apply bg-white backdrop-blur-md border border-gray-100 shadow-sm rounded-2xl p-4 transition-all duration-300;
+    }
+
+    .dark .glass-card {
+        @apply bg-gray-800 border-gray-700;
+    }
+
+    /* ─── Buttons ─────────────────────────────────────────── */
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 bg-gradient-to-r from-easygas-green to-easygas-green-dark text-white font-semibold rounded-2xl px-6 py-3 shadow-lg shadow-easygas-green/20 hover:shadow-xl hover:shadow-easygas-green/30 hover:-translate-y-0.5 transition-all active:scale-95;
+    }
+
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 bg-white dark:bg-gray-800 text-easygas-green border-2 border-easygas-green font-semibold rounded-2xl px-6 py-3 hover:bg-easygas-green/5 transition-all active:scale-95;
+    }
+
+    /* ─── Layout ──────────────────────────────────────────── */
+    /*
+     * Mobile container: on small screens it fills the full width,
+     * on desktop it renders as a centred card (like a phone frame)
+     * so the app looks good on both PC and mobile.
+     */
+    .mobile-container {
+        @apply w-full min-h-screen bg-gray-50 dark:bg-gray-900 relative flex flex-col;
+
+        /* On larger screens: centred card with max width */
+        @apply md:max-w-[480px] md:mx-auto md:shadow-2xl md:min-h-screen;
+    }
+
+    /* Outer page wrapper for PC — gives a subtle background behind the card */
+    body {
+        @apply md:bg-gray-100 dark:bg-gray-950;
+    }
+
+    /* ─── Form Inputs ─────────────────────────────────────── */
+    .app-input {
+        @apply w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-3 text-sm placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-easygas-green focus:border-transparent transition-all;
+    }
+
+    /* ─── Text gradient ───────────────────────────────────── */
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-easygas-green to-easygas-green-dark;
+    }
+
+    /* ─── Animations ──────────────────────────────────────── */
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50%       { transform: translateY(-10px); }
+    }
+
+    .animate-fade-in {
+        animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    .animate-slide-up {
+        animation: slideUp 0.4s ease-out both;
+    }
+
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(16px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── Scrollbar hide ──────────────────────────────────── */
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+}

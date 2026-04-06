@@ -1,0 +1,257 @@
+Tu es un développeur expert en Laravel, Inertia.js, Vue 3, TailwindCSS.
+Tu dois développer une application appelée EasyGas en travaillant dans un projet déjà existant Laravel + Inertia + Vue.
+
+L'application doit être conçue en MOBILE FIRST, comme une vraie application mobile (style Uber, Bolt, Orange Money, Glovo).
+Ce n’est PAS un site web classique.
+
+========================================
+📱 DESIGN MOBILE FIRST (TRÈS IMPORTANT)
+========================================
+L’interface doit ressembler à une application mobile :
+
+- Pas de header web classique
+- Pas de footer web classique
+- Utiliser une Bottom Navigation (barre en bas)
+- Interface centrée avec largeur max (max-width: 420px) sur PC
+- Sur PC : l’application doit être centrée comme un téléphone
+- Coins arrondis
+- Ombres douces
+- Animations fluides
+- Style application moderne
+
+Structure principale :
+
+[ Écran ]
+|                |
+|   Contenu      |
+|                |
+|                |
+|                |
+|----------------|
+| Accueil | Cmd | Déchets | Profil |
+|----------------|
+
+Bottom navigation obligatoire avec icônes :
+- Accueil
+- Commander
+- Déchets
+- Profil
+
+========================================
+🎨 DESIGN SYSTEM (BASÉ SUR LE LOGO EASYGAS)
+========================================
+
+Couleurs :
+- Vert clair : #7ED957
+- Vert moyen : #3FA34D
+- Vert foncé : #0B3D2E
+- Noir : #0A0A0A
+- Blanc : #FFFFFF
+
+Utiliser :
+- Dégradés verts
+- Glass effect (bg-white/70 + backdrop-blur)
+- Border radius : 16px à 24px
+- Ombres : shadow-lg
+- Icônes : Heroicons
+- Font : Poppins ou Inter
+
+Créer un fichier :
+resources/css/design-system.css
+
+Avec :
+- Variables couleurs
+- Styles boutons
+- Styles cards
+- Styles inputs
+- Styles badges
+- Styles animations
+
+========================================
+🏠 PAGE ACCUEIL (ANIMÉE)
+========================================
+
+La page d’accueil doit contenir :
+
+1. Carte de bienvenue avec animation
+   "Bienvenue sur EasyGas"
+
+2. Carte "Commander du gaz"
+3. Carte "Vendre mes déchets"
+4. Carte "Suivre ma commande"
+5. Carte "Historique"
+
+Chaque carte :
+- Icône
+- Titre
+- Petite description
+- Animation hover
+- Animation au scroll
+- Ombre + coins arrondis
+
+Ajouter animations :
+- Fade-in
+- Slide-up
+- Floating icons
+- Boutons avec effet ripple
+- Transition entre pages (page transition animation)
+
+Utiliser :
+- CSS animations
+- IntersectionObserver
+- Vue transitions
+
+========================================
+👤 FONCTIONNALITÉS
+========================================
+
+AUTH :
+- Inscription
+- Connexion
+- Rôles :
+  - client
+  - collecteur
+  - admin
+
+----------------------------------------
+
+CLIENT :
+- Commander biogaz
+  - Quantité
+  - Prix auto
+  - GPS
+  - Statut
+
+- Signaler déchets
+  - Photo
+  - Type
+  - Quantité
+  - GPS
+  - Statut
+
+- Voir historique
+- Voir gains déchets
+
+----------------------------------------
+
+COLLECTEUR :
+- Voir demandes proches
+- Voir carte GPS
+- Bouton "Collecté"
+- Bouton "Livré"
+
+----------------------------------------
+
+ADMIN :
+- Dashboard :
+  - Nombre commandes
+  - Déchets collectés
+  - Revenus
+  - Utilisateurs
+- Carte globale
+- Gestion prix
+- Gestion utilisateurs
+- Attribution collecteur
+
+========================================
+🗺 GPS
+========================================
+Utiliser géolocalisation navigateur :
+navigator.geolocation
+
+Stocker :
+- latitude
+- longitude
+
+Afficher carte avec Leaflet.js
+
+========================================
+🔔 NOTIFICATIONS
+========================================
+- Nouvelle commande
+- Nouvelle demande déchets
+- Collecte effectuée
+- Livraison effectuée
+
+========================================
+🧱 BASE DE DONNÉES
+========================================
+
+Tables :
+
+users
+- id
+- name
+- phone
+- role
+- password
+
+orders
+- id
+- user_id
+- quantity
+- price
+- status
+- latitude
+- longitude
+
+wastes
+- id
+- user_id
+- type
+- quantity
+- photo
+- status
+- latitude
+- longitude
+
+collections
+- id
+- waste_id
+- collector_id
+- status
+
+========================================
+🎨 UI COMPONENTS À CRÉER
+========================================
+
+Créer composants Vue réutilisables :
+
+- MobileLayout.vue
+- BottomNavigation.vue
+- AppCard.vue
+- AppButton.vue
+- AppInput.vue
+- AppBadge.vue
+- AppModal.vue
+- AppLoader.vue
+
+========================================
+📱 RESPONSIVE
+========================================
+
+Mobile : 100%
+Tablette : centré
+PC : centré avec max-width 420px (comme un téléphone)
+
+Classe Tailwind :
+mx-auto max-w-[420px] min-h-screen bg-gray-50
+
+========================================
+⚡ BONUS
+========================================
+Ajouter :
+- Dark mode
+- Système de points
+- Loader animé
+- Skeleton loading
+- Animations entre pages
+
+========================================
+IMPORTANT
+========================================
+Le design doit ressembler à une vraie application mobile et non à un site web.
+Interface moderne, écologique, simple et animée.
+Code propre, composants réutilisables, structure professionnelle.
+pas de textes en majuscules , l'application doit pouvoir fonctionner en français et en anglais
+l'on ne doit pas s'apercevoir qu'elle a ete faite par une ia
