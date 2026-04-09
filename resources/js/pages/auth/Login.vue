@@ -9,9 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
 import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
+
+const { __ } = useTranslate();
 
 defineProps<{
     status?: string;
@@ -22,10 +25,10 @@ defineProps<{
 
 <template>
     <AuthBase
-        title="Content de vous revoir"
-        description="Connectez-vous pour continuer sur EasyGas"
+        :title="__('Auth.Login.Welcome')"
+        :description="__('Auth.Login.Description')"
     >
-        <Head title="Connexion" />
+        <Head :title="__('Auth.Login.Title')" />
 
         <div
             v-if="status"
@@ -43,7 +46,7 @@ defineProps<{
             <div class="grid gap-6">
                 <!-- Email -->
                 <div class="grid gap-2">
-                    <Label for="email">Adresse email</Label>
+                    <Label for="email">{{ __("Auth.Login.Email") }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -60,14 +63,14 @@ defineProps<{
                 <!-- Password -->
                 <div class="grid gap-2">
                     <div class="flex items-center justify-between">
-                        <Label for="password">Mot de passe</Label>
+                        <Label for="password">{{ __("Auth.Login.Password") }}</Label>
                         <TextLink
                             v-if="canResetPassword"
                             :href="request()"
                             class="text-sm font-medium text-easygas-green"
                             :tabindex="5"
                         >
-                            Oublié ?
+                            {{ __("Auth.Login.Forgot") }}
                         </TextLink>
                     </div>
                     <PasswordInput
@@ -76,7 +79,7 @@ defineProps<{
                         required
                         :tabindex="2"
                         autocomplete="current-password"
-                        placeholder="Mot de passe"
+                        :placeholder="__('Auth.Login.Password')"
                         class="app-input"
                     />
                     <InputError :message="errors.password" />
@@ -85,7 +88,7 @@ defineProps<{
                 <div class="flex items-center justify-between">
                     <Label for="remember" class="flex items-center space-x-3 cursor-pointer">
                         <Checkbox id="remember" name="remember" :tabindex="3" />
-                        <span class="text-sm">Se souvenir de moi</span>
+                        <span class="text-sm">{{ __("Auth.Login.Remember") }}</span>
                     </Label>
                 </div>
 
@@ -97,7 +100,7 @@ defineProps<{
                     data-test="login-button"
                 >
                     <Spinner v-if="processing" />
-                    Se connecter
+                    {{ __("Auth.Login.Submit") }}
                 </Button>
             </div>
 
@@ -105,8 +108,8 @@ defineProps<{
                 class="text-center text-sm text-gray-500"
                 v-if="canRegister"
             >
-                Pas encore de compte ?
-                <TextLink :href="register()" :tabindex="5" class="text-easygas-green font-medium underline">S'inscrire</TextLink>
+                {{ __("Auth.Login.No Account") }}
+                <TextLink :href="register()" :tabindex="5" class="text-easygas-green font-medium underline">{{ __("Auth.Login.Register Link") }}</TextLink>
             </div>
         </Form>
     </AuthBase>

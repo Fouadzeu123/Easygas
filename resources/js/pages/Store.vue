@@ -1,35 +1,37 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
-import { ShoppingCart, Flame, ChevronRight, Info, Filter } from 'lucide-vue-next';
+import { ShoppingCart, Info, Filter } from 'lucide-vue-next';
 import MobileLayout from '@/layouts/MobileLayout.vue';
-import AppCard from '@/components/AppCard.vue';
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
 
 const products = [
-    { id: 1, name: 'Bouteille 12.5kg', brand: 'EasyGas Blue', price: '6500 FCFA', image: 'https://img.icons8.com/color/96/gas-industry.png', color: 'bg-blue-50' },
-    { id: 2, name: 'Bouteille 6kg', brand: 'EasyGas Green', price: '3500 FCFA', image: 'https://img.icons8.com/color/96/gas-industry.png', color: 'bg-green-50' },
-    { id: 3, name: 'Détendeur Sécurité', brand: 'EcoSafe', price: '2500 FCFA', image: 'https://img.icons8.com/color/96/pressure.png', color: 'bg-orange-50' },
-    { id: 4, name: 'Tuyau Renforcé 2m', brand: 'EcoSafe', price: '1500 FCFA', image: 'https://img.icons8.com/color/96/hose.png', color: 'bg-gray-50' },
+    { id: 1, name: __("Store.Products.Bottle 12.5kg"), brand: 'EasyGas Blue', price: '6500 FCFA', image: 'https://img.icons8.com/color/96/gas-industry.png', color: 'bg-blue-50' },
+    { id: 2, name: __("Store.Products.Bottle 6kg"), brand: 'EasyGas Green', price: '3500 FCFA', image: 'https://img.icons8.com/color/96/gas-industry.png', color: 'bg-green-50' },
+    { id: 3, name: __("Store.Products.Regulator"), brand: 'EcoSafe', price: '2500 FCFA', image: 'https://img.icons8.com/color/96/pressure.png', color: 'bg-orange-50' },
+    { id: 4, name: __("Store.Products.Hose"), brand: 'EcoSafe', price: '1500 FCFA', image: 'https://img.icons8.com/color/96/hose.png', color: 'bg-gray-50' },
 ];
 </script>
 
 <template>
-    <Head title="Boutique Gaz" />
+    <Head :title="__('Store.Title')" />
 
-    <MobileLayout title="Boutique Gaz">
+    <MobileLayout :title="__('Store.Title')">
         <div class="px-1 pt-4 pb-24">
             <!-- Promo Banner -->
             <div class="bg-gradient-to-r from-blue-600 to-blue-400 p-6 rounded-3xl text-white mb-8 relative overflow-hidden shadow-lg">
                 <div class="absolute -bottom-4 -right-4 opacity-20">
                     <ShoppingCart :size="100" />
                 </div>
-                <h2 class="text-xl font-bold mb-1 italic">Première Commande ?</h2>
-                <p class="text-xs text-blue-100 opacity-90 mb-4">Utilisez le code <span class="bg-white/20 px-2 py-0.5 rounded font-bold">ECOGAS10</span> pour -10%</p>
-                <button class="bg-white text-blue-600 px-4 py-2 rounded-full text-xs font-bold shadow-sm">En profiter</button>
+                <h2 class="text-xl font-bold mb-1 italic">{{ __("Store.Promo Title") }}</h2>
+                <p class="text-xs text-blue-100 opacity-90 mb-4" v-html='__("Store.Promo Desc", { code: "ECOGAS10" })'></p>
+                <button class="bg-white text-blue-600 px-4 py-2 rounded-full text-xs font-bold shadow-sm">{{ __("Store.Enjoy") }}</button>
             </div>
 
             <!-- Categories / Filter -->
             <div class="flex items-center justify-between mb-6">
-                <h3 class="text-lg font-bold dark:text-white italic">Produits Populaires</h3>
+                <h3 class="text-lg font-bold dark:text-white italic">{{ __("Store.Popular Products") }}</h3>
                 <button class="p-2 glass rounded-xl">
                     <Filter :size="18" class="text-gray-600 dark:text-gray-400" />
                 </button>
@@ -59,7 +61,7 @@ const products = [
 
             <!-- Bottom Note -->
             <div class="mt-12 text-center text-gray-400">
-                <p class="text-[10px]">Tous nos produits sont certifiés Eco-Garantie et supportent le recyclage local.</p>
+                <p class="text-[10px]">{{ __("Store.Certification") }}</p>
             </div>
         </div>
     </MobileLayout>

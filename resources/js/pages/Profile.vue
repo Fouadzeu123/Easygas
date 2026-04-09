@@ -1,10 +1,17 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import MobileLayout from '@/layouts/MobileLayout.vue';
 import AppCard from '@/components/AppCard.vue';
 import AppButton from '@/components/AppButton.vue';
 import AppBadge from '@/components/AppBadge.vue';
-import { User, Settings, LogOut, Package, Trash2, Award, ChevronRight } from 'lucide-vue-next';
+import { User, Settings, LogOut, Package, Trash2, Award, ChevronRight, Globe } from 'lucide-vue-next';
+
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
+const page = usePage();
+const currentLocale = computed(() => page.props.locale as string);
 
 const props = defineProps<{
     user: any;
@@ -42,14 +49,23 @@ const getStatusVariant = (status: string) => {
 };
 
 const formatStatus = (status: string) => {
-    return status.replace('_', ' ').toUpperCase();
+    // Map backend statuses to translation keys
+    const statusMap: Record<string, string> = {
+        'en_attente': 'Pending',
+        'signale':    'Reported',
+        'en_cours':   'Processing',
+        'livre':      'Delivered',
+        'collecte':   'Collected',
+        'annule':     'Cancelled'
+    };
+    return __(`Status.${statusMap[status] || 'Pending'}`);
 };
 </script>
 
 <template>
-    <Head title="Mon Profil" />
+    <Head :title="__('Profile.Title')" />
 
-    <MobileLayout>
+    <MobileLayout :title="__('Profile.Title')">
         <!-- Header Profil -->
         <div class="flex flex-col items-center py-8 bg-gradient-to-b from-easygas-green/10 to-transparent rounded-b-[3rem] -mx-6 mb-6 px-6">
             <div class="relative mb-4">
@@ -67,14 +83,14 @@ const formatStatus = (status: string) => {
             
             <div class="flex gap-4 w-full max-w-xs">
                 <div class="flex-1 bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm text-center border border-gray-100 dark:border-gray-700">
-                    <p class="text-xs text-gray-400 mb-1">Points</p>
+                    <p class="text-xs text-gray-400 mb-1">{{ __("Profile.Points") }}</p>
                     <div class="flex items-center justify-center gap-1">
                         <Award class="w-4 h-4 text-yellow-500" />
                         <span class="font-bold text-gray-800 dark:text-gray-100">{{ user.points || 0 }}</span>
                     </div>
                 </div>
                 <div class="flex-1 bg-white dark:bg-gray-800 p-3 rounded-2xl shadow-sm text-center border border-gray-100 dark:border-gray-700">
-                    <p class="text-xs text-gray-400 mb-1">Commandes</p>
+                    <p class="text-xs text-gray-400 mb-1">{{ __("Profile.Orders") }}</p>
                     <div class="flex items-center justify-center gap-1">
                         <Package class="w-4 h-4 text-easygas-green" />
                         <span class="font-bold text-gray-800 dark:text-gray-100">{{ user.orders?.length || 0 }}</span>
@@ -87,12 +103,12 @@ const formatStatus = (status: string) => {
         <div class="space-y-6 pb-20">
             <div>
                 <div class="flex justify-between items-end mb-4">
-                    <h2 class="font-bold text-gray-800 dark:text-gray-200">Activités récentes</h2>
-                    <Link :href="route('activity')" class="text-xs text-easygas-green font-medium hover:underline">Voir tout</Link>
+                    <h2 class="font-bold text-gray-800 dark:text-gray-200">{{ __("Profile.Recent Activities") }}</h2>
+                    <Link :href="route('activity')" class="text-xs text-easygas-green font-medium hover:underline">{{ __("Profile.View All") }}</Link>
                 </div>
                 
                 <div v-if="[...user.orders, ...user.wastes].length === 0" class="text-center py-10 text-gray-400 bg-gray-50 dark:bg-gray-800/50 rounded-3xl border-2 border-dashed border-gray-100 dark:border-gray-800">
-                    Pas d'activité récente.
+                    {{ __("Profile.No Activity") }}
                 </div>
                 
                 <div v-else class="space-y-3">
@@ -102,7 +118,7 @@ const formatStatus = (status: string) => {
                             <Package class="w-6 h-6 text-orange-600" />
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-bold text-sm text-gray-800 dark:text-gray-100">Commande Gaz ({{ order.quantity }}kg)</h3>
+                            <h3 class="font-bold text-sm text-gray-800 dark:text-gray-100">{{ __("Profile.Gas Order", { quantitykg: order.quantity.toString() }) }}</h3>
                             <p class="text-[10px] text-gray-400">{{ new Date(order.created_at).toLocaleDateString() }}</p>
                         </div>
                         <AppBadge :variant="getStatusVariant(order.status)">{{ formatStatus(order.status) }}</AppBadge>
@@ -114,7 +130,7 @@ const formatStatus = (status: string) => {
                             <Trash2 class="w-6 h-6 text-green-600" />
                         </div>
                         <div class="flex-1">
-                            <h3 class="font-bold text-sm text-gray-800 dark:text-gray-100">Apport Déchets ({{ waste.type }})</h3>
+                            <h3 class="font-bold text-sm text-gray-800 dark:text-gray-100">{{ __("Profile.Waste Collection", { type: __(`Waste.Types.${waste.type}`) }) }}</h3>
                             <p class="text-[10px] text-gray-400">{{ new Date(waste.created_at).toLocaleDateString() }}</p>
                         </div>
                         <AppBadge :variant="getStatusVariant(waste.status)">{{ formatStatus(waste.status) }}</AppBadge>
@@ -122,19 +138,40 @@ const formatStatus = (status: string) => {
                 </div>
             </div>
 
+            <!-- Langue -->
+            <div class="space-y-2">
+                <h2 class="font-bold text-gray-800 dark:text-gray-200 mb-2">{{ __("Common.Switch Language") }}</h2>
+                <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 overflow-hidden flex p-1 shadow-sm">
+                    <Link 
+                        :href="route('language.switch', { locale: 'fr' })" 
+                        class="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl transition-all font-bold text-xs"
+                        :class="currentLocale === 'fr' ? 'bg-easygas-green text-white shadow-md' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                    >
+                        Français
+                    </Link>
+                    <Link 
+                        :href="route('language.switch', { locale: 'en' })" 
+                        class="flex-1 flex items-center justify-center gap-2 py-3 rounded-2xl transition-all font-bold text-xs"
+                        :class="currentLocale === 'en' ? 'bg-easygas-green text-white shadow-md' : 'text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'"
+                    >
+                        English
+                    </Link>
+                </div>
+            </div>
+
             <!-- Menu de réglages -->
             <div class="space-y-2">
-                <h2 class="font-bold text-gray-800 dark:text-gray-200 mb-2">Application</h2>
+                <h2 class="font-bold text-gray-800 dark:text-gray-200 mb-2">{{ __("Profile.App Settings") }}</h2>
                 <div class="bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 overflow-hidden">
                     <Link :href="route('profile.edit')" class="w-full flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left">
                         <div class="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg"><User class="w-4 h-4 text-blue-600" /></div>
-                        <span class="flex-1 text-sm font-medium text-gray-700 dark:text-gray-200">Modifier mon profil</span>
+                        <span class="flex-1 text-sm font-medium text-gray-700 dark:text-gray-200">{{ __("Profile.Edit Profile") }}</span>
                         <ChevronRight class="w-4 h-4 text-gray-300" />
                     </Link>
                     <div class="h-px bg-gray-50 dark:bg-gray-700 mx-4"></div>
                     <button class="w-full flex items-center gap-4 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors text-left font-bold text-red-500" @click="logout" :disabled="logoutForm.processing">
                         <div class="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg"><LogOut class="w-4 h-4 text-red-600" /></div>
-                        <span class="flex-1 text-sm">Déconnexion</span>
+                        <span class="flex-1 text-sm">{{ __("Profile.Logout") }}</span>
                     </button>
                 </div>
             </div>

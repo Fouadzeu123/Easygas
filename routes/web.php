@@ -10,6 +10,13 @@ Route::get('/', function () {
     ]);
 })->name('home');
 
+Route::get('language/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'fr'])) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('language.switch');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     // Client routes
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
@@ -30,11 +37,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'orders' => $user->missionsDelivered()->latest()->get()->map(fn ($o) => [
                     'id'         => $o->id,
                     'type'       => 'gaz',
-                    'title'      => 'Livraison Gaz #' . $o->id,
+                    'title'      => __('Activity.Gas Delivery', ['id' => $o->id]),
                     'date'       => $o->created_at->diffForHumans(),
                     'status'     => match($o->status) {
-                        'livre'        => 'Livré',
-                        'annule'       => 'Annulée',
+                        'livre'        => __('Status.Delivered'),
+                        'annule'       => __('Status.Cancelled'),
                         default        => ucfirst($o->status),
                     },
                     'amount'     => '+' . number_format($o->price * 0.1, 0, ',', ' ') . ' FCFA (Commission)', // Example 10%
@@ -43,11 +50,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 'wastes' => $user->missionsCollected()->latest()->get()->map(fn ($w) => [
                     'id'         => $w->id,
                     'type'       => 'recyclage',
-                    'title'      => 'Collecte #' . $w->id,
+                    'title'      => __('Activity.Collection', ['id' => $w->id]),
                     'date'       => $w->created_at->diffForHumans(),
                     'status'     => match($w->status) {
-                        'collecte' => 'Collecté',
-                        'traite'   => 'Traité',
+                        'collecte' => __('Status.Collected'),
+                        'traite'   => __('Status.Processed'),
                         default    => ucfirst($w->status),
                     },
                     'amount'     => '+' . ($w->quantity * 50) . ' FCFA (Gain)',
@@ -59,14 +66,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'orders' => $user->orders()->latest()->get()->map(fn ($o) => [
                 'id'         => $o->id,
                 'type'       => 'gaz',
-                'title'      => 'Recharge ' . $o->quantity . 'kg',
+                'title'      => __('Activity.Refill', ['quantity' => $o->quantity]),
                 'date'       => $o->created_at->diffForHumans(),
                 'status'     => match($o->status) {
-                    'en_attente'   => 'En attente',
-                    'confirme'     => 'Confirmée',
-                    'en_livraison' => 'En livraison',
-                    'livre'        => 'Livré',
-                    'annule'       => 'Annulée',
+                    'en_attente'   => __('Status.Pending'),
+                    'confirme'     => __('Status.Confirmed'),
+                    'en_livraison' => __('Status.Delivering'),
+                    'livre'        => __('Status.Delivered'),
+                    'annule'       => __('Status.Cancelled'),
                     default        => ucfirst($o->status),
                 },
                 'amount'     => '-' . number_format($o->price, 0, ',', ' ') . ' FCFA',
@@ -75,13 +82,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             'wastes' => $user->wastes()->latest()->get()->map(fn ($w) => [
                 'id'         => $w->id,
                 'type'       => 'recyclage',
-                'title'      => 'Collecte ' . ucfirst($w->type),
+                'title'      => __('Activity.Collection Type', ['type' => ucfirst($w->type)]),
                 'date'       => $w->created_at->diffForHumans(),
                 'status'     => match($w->status) {
-                    'signale'  => 'Signalé',
-                    'assigne'  => 'Assigné',
-                    'collecte' => 'Collecté',
-                    'traite'   => 'Traité',
+                    'signale'  => __('Status.Reported'),
+                    'assigne'  => __('Status.Assigned'),
+                    'collecte' => __('Status.Collected'),
+                    'traite'   => __('Status.Processed'),
                     default    => ucfirst($w->status),
                 },
                 'amount'     => '+' . $w->points_awarded . ' pts',

@@ -2,6 +2,9 @@
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { Gift, Wallet, Flame, AlertCircle, ArrowRight, CheckCircle2 } from 'lucide-vue-next';
 import MobileLayout from '@/layouts/MobileLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
 import AppButton from '@/components/AppButton.vue';
 import AppCard from '@/components/AppCard.vue';
 import AppInput from '@/components/AppInput.vue';
@@ -33,9 +36,9 @@ const submitCashout = () => {
 </script>
 
 <template>
-    <Head title="Mes Récompenses" />
+    <Head :title="__('Rewards.Title')" />
 
-    <MobileLayout title="Récompenses">
+    <MobileLayout :title="__('Rewards.Title')">
         <!-- En-tête Points -->
         <div class="px-5 pt-6 pb-24 space-y-6">
             <div class="bg-gradient-to-br from-yellow-400 to-amber-600 rounded-3xl p-6 text-white shadow-xl shadow-amber-500/20 relative overflow-hidden">
@@ -43,10 +46,9 @@ const submitCashout = () => {
                     <Gift :size="120" />
                 </div>
                 <div class="relative z-10">
-                    <p class="text-amber-100 font-bold tracking-widest uppercase text-xs mb-1">Mon Solde</p>
+                    <p class="text-amber-100 font-bold tracking-widest uppercase text-xs mb-1">{{ __("Rewards.My Balance") }}</p>
                     <h2 class="text-4xl font-black mb-2">{{ userPoints }} <span class="text-lg font-bold">PTS</span></h2>
-                    <p class="text-sm border-t border-white/20 pt-2 mt-2 inline-block">
-                        Équivalent à environ <strong>{{ cashValue.toLocaleString() }} FCFA</strong>
+                    <p class="text-sm border-t border-white/20 pt-2 mt-2 inline-block" v-html="__('Rewards.Equivalent', { value: cashValue.toLocaleString() })">
                     </p>
                 </div>
             </div>
@@ -70,12 +72,12 @@ const submitCashout = () => {
                         <Flame :size="24" />
                     </div>
                     <div>
-                        <h3 class="font-black text-gray-900 dark:text-white text-lg">Réduction sur le Gaz</h3>
+                        <h3 class="font-black text-gray-900 dark:text-white text-lg">{{ __("Rewards.Gas Discount Title") }}</h3>
                         <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-3">
-                            Utilisez vos points directement lors de la confirmation d'une livraison de gaz pour réduire la facture finale.
+                            {{ __("Rewards.Gas Discount Desc") }}
                         </p>
                         <Link :href="route('order.create')" class="text-sm font-black text-blue-600 dark:text-blue-400 flex items-center gap-1 hover:gap-2 transition-all">
-                            Commander du Gaz <ArrowRight :size="16" />
+                            {{ __("Rewards.Order Gas") }} <ArrowRight :size="16" />
                         </Link>
                     </div>
                 </div>
@@ -88,8 +90,8 @@ const submitCashout = () => {
                         <Wallet :size="24" />
                     </div>
                     <div>
-                        <h3 class="font-black text-gray-900 dark:text-white text-lg">Retrait Mobile Money</h3>
-                        <p class="text-xs text-gray-500 dark:text-gray-400">Transférez vos gains en argent réel.</p>
+                        <h3 class="font-black text-gray-900 dark:text-white text-lg">{{ __("Rewards.Cashout Title") }}</h3>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">{{ __("Rewards.Cashout Desc") }}</p>
                     </div>
                 </div>
 
@@ -113,7 +115,7 @@ const submitCashout = () => {
                         id="phone"
                         v-model="form.phone as any"
                         type="tel"
-                        label="Numéro de téléphone"
+                        :label="__('Rewards.Phone Label')"
                         placeholder="Ex: 6XXXXXXXX"
                         :error="form.errors.phone"
                         required
@@ -126,16 +128,16 @@ const submitCashout = () => {
                             type="number"
                             min="500"
                             step="100"
-                            label="Montant à retirer (FCFA)"
-                            placeholder="Min. 500 FCFA"
+                            :label="__('Rewards.Amount Label')"
+                            :placeholder="__('Rewards.Min Amount')"
                             :error="form.errors.amount"
                             required
                         />
-                        <p class="text-[10px] text-gray-400 mt-1 pl-1">Coût : {{ Math.ceil((form.amount || 0) / pointValue) }} PTS</p>
+                        <p class="text-[10px] text-gray-400 mt-1 pl-1">{{ __("Rewards.Cost", { pts: Math.ceil((form.amount || 0) / pointValue).toString() }) }}</p>
                     </div>
 
                     <AppButton type="submit" variant="primary" class="w-full mt-2" :loading="form.processing" :disabled="userPoints < Math.ceil((form.amount || 0) / pointValue) || form.amount < 500">
-                        Initier le Retrait
+                        {{ __("Rewards.Submit Cashout") }}
                     </AppButton>
                 </form>
             </AppCard>

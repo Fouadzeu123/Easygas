@@ -8,8 +8,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import AuthBase from '@/layouts/AuthLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
 import { login } from '@/routes';
 import { store } from '@/routes/register';
+
+const { __ } = useTranslate();
 
 defineProps<{
     status?: string;
@@ -18,10 +21,10 @@ defineProps<{
 
 <template>
     <AuthBase
-        title="Créer un compte"
-        description="Rejoignez la communauté EasyGas"
+        :title="__('Auth.Register.Welcome')"
+        :description="__('Auth.Register.Description')"
     >
-        <Head title="Inscription" />
+        <Head :title="__('Auth.Register.Title')" />
 
         <Form
             v-bind="store.form()"
@@ -32,7 +35,7 @@ defineProps<{
             <div class="grid gap-6">
                 <!-- Name -->
                 <div class="grid gap-2">
-                    <Label for="name">Nom complet</Label>
+                    <Label for="name">{{ __("Auth.Register.Name") }}</Label>
                     <Input
                         id="name"
                         type="text"
@@ -48,7 +51,7 @@ defineProps<{
 
                 <!-- Phone -->
                 <div class="grid gap-2">
-                    <Label for="phone">Téléphone</Label>
+                    <Label for="phone">{{ __("Auth.Register.Phone") }}</Label>
                     <Input
                         id="phone"
                         type="tel"
@@ -62,7 +65,7 @@ defineProps<{
 
                 <!-- Email -->
                 <div class="grid gap-2">
-                    <Label for="email">Adresse email</Label>
+                    <Label for="email">{{ __("Auth.Register.Email") }}</Label>
                     <Input
                         id="email"
                         type="email"
@@ -76,14 +79,14 @@ defineProps<{
                 </div>
                 <!-- Password -->
                 <div class="grid gap-2">
-                    <Label for="password">Mot de passe</Label>
+                    <Label for="password">{{ __("Auth.Register.Password") }}</Label>
                     <PasswordInput
                         id="password"
                         name="password"
                         required
                         :tabindex="5"
                         autocomplete="new-password"
-                        placeholder="Mot de passe"
+                        :placeholder="__('Auth.Register.Password')"
                         class="app-input"
                     />
                     <InputError :message="errors.password" />
@@ -91,14 +94,14 @@ defineProps<{
 
                 <!-- Confirm Password -->
                 <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirmer le mot de passe</Label>
+                    <Label for="password_confirmation">{{ __("Auth.Register.Confirm Password") }}</Label>
                     <PasswordInput
                         id="password_confirmation"
                         name="password_confirmation"
                         required
                         :tabindex="6"
                         autocomplete="new-password"
-                        placeholder="Confirmer le mot de passe"
+                        :placeholder="__('Auth.Register.Confirm Password')"
                         class="app-input"
                     />
                     <InputError :message="errors.password_confirmation" />
@@ -112,17 +115,17 @@ defineProps<{
                     data-test="register-user-button"
                 >
                     <Spinner v-if="processing" />
-                    Créer mon compte
+                    {{ __("Auth.Register.Submit") }}
                 </Button>
             </div>
 
             <div class="text-center text-sm text-muted-foreground">
-                Déjà un compte ?
+                {{ __("Auth.Register.Already Account") }}
                 <TextLink
                     :href="login()"
                     class="underline underline-offset-4"
                     :tabindex="8"
-                    >Se connecter</TextLink
+                    >{{ __("Auth.Register.Login Link") }}</TextLink
                 >
             </div>
         </Form>

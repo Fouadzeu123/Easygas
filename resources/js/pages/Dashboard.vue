@@ -2,6 +2,7 @@
 import { Head, Link } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
+import { useTranslate } from '@/composables/useTranslate';
 import {
     Award,
     ChevronRight,
@@ -12,6 +13,8 @@ import {
     Trash2,
 } from 'lucide-vue-next';
 import MobileLayout from '@/layouts/MobileLayout.vue';
+
+const { __ } = useTranslate();
 
 // Global route helper
 const route = (name?: string, params?: any) => {
@@ -39,16 +42,16 @@ const loyaltyProgress = computed(() => {
 const ptsToNextReward = computed(() => 100 - loyaltyProgress.value);
 
 const statusColor: Record<string, string> = {
-    'En attente':    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-    'Confirmée':     'bg-blue-100  text-blue-700   dark:bg-blue-900/30   dark:text-blue-400',
-    'En livraison':  'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
+    [__('Status.Pending')]:    'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
+    [__('Status.Confirmed')]:     'bg-blue-100  text-blue-700   dark:bg-blue-900/30   dark:text-blue-400',
+    [__('Status.Delivering')]:  'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
 };
 </script>
 
 <template>
-    <Head title="Tableau de bord" />
+    <Head :title="__('Dashboard.Title')" />
 
-    <MobileLayout title="Tableau de bord">
+    <MobileLayout :title="__('Dashboard.Title')">
         <!-- ─── Carte fidélité ─────────────────────────────── -->
         <div class="relative bg-gradient-to-br from-easygas-green via-easygas-green-dark to-[#052218] p-6 rounded-3xl text-white overflow-hidden shadow-2xl shadow-easygas-green/20 mb-6">
             <!-- Décoration de fond -->
@@ -58,12 +61,12 @@ const statusColor: Record<string, string> = {
             <div class="relative z-10">
                 <div class="flex items-start justify-between mb-5">
                     <div>
-                        <p class="text-xs text-green-200 uppercase tracking-widest font-bold mb-1">Bonjour</p>
+                        <p class="text-xs text-green-200 uppercase tracking-widest font-bold mb-1">{{ __("Dashboard.Hello") }}</p>
                         <h2 class="text-2xl font-black leading-tight">{{ user?.name?.split(' ')[0] }}</h2>
                     </div>
                     <div class="bg-white/15 backdrop-blur-sm px-3 py-1.5 rounded-full flex items-center gap-1.5">
                         <Award class="w-4 h-4 text-yellow-300" />
-                        <span class="font-black text-sm">{{ user?.points ?? 0 }} pts</span>
+                        <span class="font-black text-sm">{{ user?.points ?? 0 }} {{ __("Dashboard.pts") }}</span>
                     </div>
                 </div>
 
@@ -75,7 +78,7 @@ const statusColor: Record<string, string> = {
                     ></div>
                 </div>
                 <p class="text-[11px] text-green-100">
-                    Encore <strong>{{ ptsToNextReward }} pts</strong> pour votre prochaine récompense
+                    {{ __("Dashboard.Points to next reward", { points: ptsToNextReward.toString() }) }}
                 </p>
             </div>
         </div>
@@ -88,8 +91,8 @@ const statusColor: Record<string, string> = {
                         <Flame :size="28" class="text-white" />
                     </div>
                     <div class="flex-1">
-                        <h3 class="text-white font-bold text-lg leading-tight">Commander du Gaz</h3>
-                        <p class="text-white/70 text-xs mt-0.5">Livraison gratuite à domicile</p>
+                        <h3 class="text-white font-bold text-lg leading-tight">{{ __("Dashboard.Order Gas") }}</h3>
+                        <p class="text-white/70 text-xs mt-0.5">{{ __("Dashboard.Free home delivery") }}</p>
                     </div>
                     <ChevronRight :size="20" class="text-white/60 group-hover:translate-x-1 transition-transform" />
                 </div>
@@ -100,7 +103,7 @@ const statusColor: Record<string, string> = {
                     <div class="bg-blue-100 dark:bg-blue-900/30 p-2.5 rounded-xl">
                         <Trash2 :size="22" class="text-blue-600 dark:text-blue-400" />
                     </div>
-                    <span class="font-bold text-xs text-gray-700 dark:text-gray-200 text-center leading-tight">Signaler Déchets</span>
+                    <span class="font-bold text-xs text-gray-700 dark:text-gray-200 text-center leading-tight">{{ __("Dashboard.Report Wastes") }}</span>
                 </div>
             </Link>
 
@@ -109,7 +112,7 @@ const statusColor: Record<string, string> = {
                     <div class="bg-purple-100 dark:bg-purple-900/30 p-2.5 rounded-xl">
                         <Gift :size="22" class="text-purple-600 dark:text-purple-400" />
                     </div>
-                    <span class="font-bold text-xs text-gray-700 dark:text-gray-200 text-center leading-tight">Récompenses</span>
+                    <span class="font-bold text-xs text-gray-700 dark:text-gray-200 text-center leading-tight">{{ __("Dashboard.Rewards") }}</span>
                 </div>
             </Link>
 
@@ -118,7 +121,7 @@ const statusColor: Record<string, string> = {
                     <div class="bg-green-100 dark:bg-green-900/30 p-2.5 rounded-xl">
                         <TrendingUp :size="22" class="text-green-600 dark:text-green-400" />
                     </div>
-                    <span class="font-bold text-xs text-gray-700 dark:text-gray-200 text-center leading-tight">Historique</span>
+                    <span class="font-bold text-xs text-gray-700 dark:text-gray-200 text-center leading-tight">{{ __("Dashboard.History") }}</span>
                 </div>
             </Link>
         </div>
@@ -126,8 +129,8 @@ const statusColor: Record<string, string> = {
         <!-- ─── Impact Écologique ──────────────────────────── -->
         <div class="mb-6">
             <div class="flex justify-between items-center mb-3">
-                <h2 class="text-base font-bold text-gray-800 dark:text-white">Mon Impact</h2>
-                <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">Cumulé</span>
+                <h2 class="text-base font-bold text-gray-800 dark:text-white">{{ __("Dashboard.My Impact") }}</h2>
+                <span class="text-[10px] text-gray-400 font-medium uppercase tracking-widest">{{ __("Dashboard.Cumulative") }}</span>
             </div>
             <div class="grid grid-cols-3 gap-3">
                 <div
@@ -146,7 +149,7 @@ const statusColor: Record<string, string> = {
 
         <!-- ─── Livraisons en cours ────────────────────────── -->
         <div v-if="upcomingDeliveries.length > 0" class="mb-6">
-            <h2 class="text-base font-bold text-gray-800 dark:text-white mb-3">En cours</h2>
+            <h2 class="text-base font-bold text-gray-800 dark:text-white mb-3">{{ __("Dashboard.Ongoing") }}</h2>
             <div class="space-y-3">
                 <div
                     v-for="delivery in upcomingDeliveries"
@@ -158,7 +161,7 @@ const statusColor: Record<string, string> = {
                     </div>
                     <div class="flex-1 min-w-0">
                         <p class="text-sm font-bold text-gray-800 dark:text-white truncate">{{ delivery.type }}</p>
-                        <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5 truncate">Livreur : {{ delivery.driver }}</p>
+                        <p class="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5 truncate">{{ __("Dashboard.Driver") }} : {{ delivery.driver }}</p>
                     </div>
                     <span :class="[statusColor[delivery.status] || 'bg-gray-100 text-gray-500', 'text-[10px] font-bold px-2.5 py-1 rounded-full flex-shrink-0']">
                         {{ delivery.status }}

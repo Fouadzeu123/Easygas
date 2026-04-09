@@ -3,6 +3,9 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref, computed } from 'vue';
 import { History, Flame, Trash2, Clock, ShoppingBag, ArrowDownLeft, ArrowUpRight } from 'lucide-vue-next';
 import MobileLayout from '@/layouts/MobileLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
 
 const props = defineProps<{
     orders: Array<{
@@ -69,23 +72,23 @@ const totalPoints = computed(() =>
 </script>
 
 <template>
-    <Head title="Historique" />
+    <Head :title="__('Activity.History')" />
 
-    <MobileLayout title="Mes Activités">
+    <MobileLayout :title="__('Activity.Title')">
         <div class="px-1 pt-4 pb-24">
             <!-- Summary Card -->
             <div class="grid grid-cols-2 gap-3 mb-6">
                 <div class="bg-orange-50 dark:bg-orange-900/20 border border-orange-100 dark:border-orange-800 p-4 rounded-2xl">
                     <div class="flex items-center gap-2 mb-1">
                         <ArrowUpRight :size="14" class="text-orange-500" />
-                        <span class="text-[10px] font-bold uppercase tracking-wide text-orange-500">Dépenses</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wide text-orange-500">{{ __("Activity.Spent") }}</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900 dark:text-white">{{ totalSpent.toLocaleString() }} <span class="text-xs font-normal">FCFA</span></p>
                 </div>
                 <div class="bg-green-50 dark:bg-green-900/20 border border-green-100 dark:border-green-800 p-4 rounded-2xl">
                     <div class="flex items-center gap-2 mb-1">
                         <ArrowDownLeft :size="14" class="text-easygas-green" />
-                        <span class="text-[10px] font-bold uppercase tracking-wide text-easygas-green">Points Gagnés</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wide text-easygas-green">{{ __("Activity.Points Gained") }}</span>
                     </div>
                     <p class="text-lg font-bold text-gray-900 dark:text-white">{{ totalPoints }} <span class="text-xs font-normal">pts</span></p>
                 </div>
@@ -96,15 +99,15 @@ const totalPoints = computed(() =>
                 <button
                     @click="activeTab = 'all'"
                     :class="['flex-1 py-2.5 text-xs font-bold rounded-xl transition-all', activeTab === 'all' ? 'bg-white dark:bg-gray-700 shadow-sm text-easygas-green' : 'text-gray-400']"
-                >Tout</button>
+                >{{ __("Activity.All") }}</button>
                 <button
                     @click="activeTab = 'orders'"
                     :class="['flex-1 py-2.5 text-xs font-bold rounded-xl transition-all', activeTab === 'orders' ? 'bg-white dark:bg-gray-700 shadow-sm text-easygas-green' : 'text-gray-400']"
-                >Commandes</button>
+                >{{ __("Activity.Orders") }}</button>
                 <button
                     @click="activeTab = 'wastes'"
                     :class="['flex-1 py-2.5 text-xs font-bold rounded-xl transition-all', activeTab === 'wastes' ? 'bg-white dark:bg-gray-700 shadow-sm text-easygas-green' : 'text-gray-400']"
-                >Recyclage</button>
+                >{{ __("Activity.Recycling") }}</button>
             </div>
 
             <!-- Activity List -->
@@ -140,11 +143,11 @@ const totalPoints = computed(() =>
                 <div class="bg-gray-100 dark:bg-gray-800 p-6 rounded-full mb-4">
                     <History :size="48" class="text-gray-300 dark:text-gray-600" />
                 </div>
-                <h3 class="font-bold text-gray-900 dark:text-white">Aucune activité</h3>
-                <p class="text-sm text-gray-400 mt-1 mb-6">Vos futures commandes et recyclages apparaîtront ici.</p>
+                <h3 class="font-bold text-gray-900 dark:text-white">{{ __("Activity.No Activity") }}</h3>
+                <p class="text-sm text-gray-400 mt-1 mb-6">{{ __("Activity.No Activity Desc") }}</p>
                 <Link :href="route('order.create')" class="btn-primary">
                     <ShoppingBag :size="16" class="mr-2" />
-                    Commander du gaz
+                    {{ __("Activity.Order Gas") }}
                 </Link>
             </div>
         </div>

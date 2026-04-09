@@ -3,6 +3,10 @@ import { Head, Link } from '@inertiajs/vue3';
 import { ref, onMounted, onUnmounted } from 'vue';
 import { Globe, CheckCircle2, Info, Leaf, ChevronLeft, ChevronRight, MessageCircle, UserPlus, MapPin, ArrowRight } from 'lucide-vue-next';
 import TopAppBar from '@/components/TopAppBar.vue';
+import { useTranslate } from '@/composables/useTranslate';
+import { computed } from 'vue';
+
+const { __ } = useTranslate();
 
 // Global route helper access - safe for SSR and HMR
 const route = (name?: string, params?: any) => {
@@ -30,35 +34,35 @@ defineProps<{
 const currentIndex = ref(0);
 let autoInterval: any = null;
 
-const slidesData = [
+const slidesData = computed(() => [
     {
         img: "https://images.unsplash.com/photo-1583341443956-95c34d2f43ac?w=1200&h=600&fit=crop",
-        title: "Mont Cameroun (Fako)",
-        desc: "Point culminant d'Afrique de l'Ouest, 4 095 m. Symbole de fierté nationale."
+        title: __("Welcome.Slides.Fako Title"),
+        desc: __("Welcome.Slides.Fako Desc")
     },
     {
         img: "https://images.unsplash.com/photo-1590846406792-0adc7f938f1d?w=1200&h=600&fit=crop",
-        title: "Parc national de Campo Ma'an",
-        desc: "Sanctuaire de gorilles et éléphants de forêt — Poumon vert du Sud Cameroun."
+        title: __("Welcome.Slides.Campo Title"),
+        desc: __("Welcome.Slides.Campo Desc")
     },
     {
         img: "https://images.unsplash.com/photo-1582610116397-edb318620f90?w=1200&h=600&fit=crop",
-        title: "Palais des Rois Bamoun, Foumban",
-        desc: "Chef-d'œuvre architectural et culturel, histoire du peuple Bamoun."
+        title: __("Welcome.Slides.Bamoun Title"),
+        desc: __("Welcome.Slides.Bamoun Desc")
     },
     {
         img: "https://images.unsplash.com/photo-1609365567865-0c5ebda7bb1c?w=1200&h=600&fit=crop",
-        title: "Plages de Kribi & Lobé",
-        desc: "Fleuve se jetant directement dans l'océan — paysages de cocotiers."
+        title: __("Welcome.Slides.Kribi Title"),
+        desc: __("Welcome.Slides.Kribi Desc")
     }
-];
+]);
 
 const nextSlide = () => {
-    currentIndex.value = (currentIndex.value + 1) % slidesData.length;
+    currentIndex.value = (currentIndex.value + 1) % slidesData.value.length;
 };
 
 const prevSlide = () => {
-    currentIndex.value = (currentIndex.value - 1 + slidesData.length) % slidesData.length;
+    currentIndex.value = (currentIndex.value - 1 + slidesData.value.length) % slidesData.value.length;
 };
 
 const goToSlide = (index: number) => {
@@ -81,7 +85,7 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <Head title="Accueil | EasyGas Cameroun" />
+    <Head :title="__('Welcome.Title')" />
 
     <div class="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 overflow-x-hidden min-h-screen transition-colors duration-300">
         <!-- Modern AppBar with Theme Toggle -->
@@ -95,28 +99,28 @@ onUnmounted(() => {
                 <div class="flex-1 text-center md:text-left space-y-8">
                     <div class="inline-flex items-center gap-2 bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm px-4 py-1.5 rounded-full border border-green-100 dark:border-green-900 shadow-sm animate-fade-in">
                         <Globe :size="14" class="text-easygas-green" />
-                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">Énergie verte & recyclage au Cameroun</span>
+                        <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">{{ __("Welcome.Tagline") }}</span>
                     </div>
                     <h1 class="text-5xl md:text-7xl font-extrabold leading-[1.1] tracking-tight dark:text-white animate-slide-up">
-                        Le Gaz de Demain,<br/>
-                        <span class="text-gradient drop-shadow-sm">Accessible Aujourd'hui</span>
+                        {{ __("Welcome.Hero Title") }}<br/>
+                        <span class="text-gradient drop-shadow-sm">{{ __("Welcome.Hero Title Accent") }}</span>
                     </h1>
                     <p class="text-lg text-gray-600 dark:text-gray-400 max-w-lg mx-auto md:mx-0 leading-relaxed animate-slide-up" style="animation-delay: 0.1s">
-                        Rechargez votre gaz en un clic, valorisez vos déchets plastiques et contribuez à un Cameroun plus propre et plus vert.
+                        {{ __("Welcome.Hero Subtitle") }}
                     </p>
                     <div class="flex flex-col sm:flex-row gap-4 pt-4 justify-center md:justify-start animate-slide-up" style="animation-delay: 0.2s">
                         <Link :href="route('register')" class="btn-primary inline-flex items-center justify-center gap-2 text-base group">
-                            Commencer l'Aventure
+                            {{ __("Welcome.Start Adventure") }}
                             <ArrowRight class="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                         </Link>
                         <a href="#decouvrir" class="text-gray-900 dark:text-white font-bold py-3 px-6 rounded-full border-2 border-gray-100 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-all flex items-center gap-2 justify-center">
-                            Découvrir
+                            {{ __("Welcome.Discover") }}
                         </a>
                     </div>
                     <div class="flex flex-wrap gap-6 justify-center md:justify-start pt-6 text-sm text-gray-500 animate-slide-up" style="animation-delay: 0.3s">
-                        <span class="flex items-center gap-1.5"><CheckCircle2 :size="16" class="text-easygas-green" /> Livraison Express</span>
-                        <span class="flex items-center gap-1.5"><CheckCircle2 :size="16" class="text-easygas-green" /> Collecte Déchets</span>
-                        <span class="flex items-center gap-1.5"><MapPin :size="16" class="text-easygas-green" /> National</span>
+                        <span class="flex items-center gap-1.5"><CheckCircle2 :size="16" class="text-easygas-green" /> {{ __("Welcome.Express Delivery") }}</span>
+                        <span class="flex items-center gap-1.5"><CheckCircle2 :size="16" class="text-easygas-green" /> {{ __("Welcome.Waste Collection") }}</span>
+                        <span class="flex items-center gap-1.5"><MapPin :size="16" class="text-easygas-green" /> {{ __("Welcome.National") }}</span>
                     </div>
                 </div>
                 <div class="flex-1 flex justify-center animate-float relative">
@@ -130,10 +134,10 @@ onUnmounted(() => {
         <section id="decouvrir" class="py-24 px-6 bg-white dark:bg-gray-900 transition-colors">
             <div class="max-w-6xl mx-auto">
                 <div class="text-center mb-16">
-                    <span class="text-xs uppercase tracking-[0.2em] text-easygas-green font-black">Patrimoine & Énergie</span>
-                    <h2 class="text-4xl md:text-5xl font-bold mt-4 dark:text-white tracking-tight">Vivre le Cameroun Autrement</h2>
+                    <span class="text-xs uppercase tracking-[0.2em] text-easygas-green font-black">{{ __("Welcome.Heritage & Energy") }}</span>
+                    <h2 class="text-4xl md:text-5xl font-bold mt-4 dark:text-white tracking-tight">{{ __("Welcome.Experience Cameroon") }}</h2>
                     <div class="w-24 h-1.5 bg-gradient-to-r from-easygas-green to-easygas-accent mx-auto mt-6 rounded-full"></div>
-                    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-6 leading-relaxed">De Foumban à Kribi, l'énergie de notre terre nourrit notre engagement pour un avenir durable et écologique au cœur de l'Afrique.</p>
+                    <p class="text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mt-6 leading-relaxed">{{ __("Welcome.Cameroon Description") }}</p>
                 </div>
 
                 <div class="carousel-container relative w-full max-w-5xl mx-auto bg-gray-100 dark:bg-gray-800 rounded-[2.5rem] overflow-hidden shadow-2xl transition-colors">
@@ -144,13 +148,13 @@ onUnmounted(() => {
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-12 text-white">
                                     <div class="flex items-center gap-2 mb-3 slide-up">
                                         <div class="w-8 h-0.5 bg-easygas-green rounded-full"></div>
-                                        <span class="text-xs font-bold tracking-widest uppercase text-easygas-green">Cameroun Authentique</span>
+                                        <span class="text-xs font-bold tracking-widest uppercase text-easygas-green">{{ __("Welcome.Authentic") }}</span>
                                     </div>
                                     <h3 class="text-3xl md:text-4xl font-black drop-shadow-md mb-2">{{ slide.title }}</h3>
                                     <p class="text-sm md:text-lg max-w-xl drop-shadow-md opacity-90 leading-relaxed">{{ slide.desc }}</p>
                                     <div class="flex items-center gap-2 mt-6">
                                         <MapPin :size="16" class="text-easygas-green" />
-                                        <span class="text-xs font-semibold tracking-wide">Patrimoine protégé</span>
+                                        <span class="text-xs font-semibold tracking-wide">{{ __("Welcome.Protected Heritage") }}</span>
                                     </div>
                                 </div>
                             </div>
@@ -181,20 +185,20 @@ onUnmounted(() => {
                     <div class="space-y-8">
                         <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-400 text-xs font-black tracking-widest uppercase">
                             <Info :size="14" />
-                            <span>Notre Mission Locale</span>
+                            <span>{{ __("Welcome.Our Local Mission") }}</span>
                         </div>
-                        <h3 class="text-4xl md:text-5xl font-black dark:text-white leading-tight tracking-tighter">Un Engagement au Cœur des Réalités</h3>
+                        <h3 class="text-4xl md:text-5xl font-black dark:text-white leading-tight tracking-tighter">{{ __("Welcome.Commitment Title") }}</h3>
                         <p class="text-gray-600 dark:text-gray-400 leading-relaxed text-lg">
-                            Au-delà du biogaz, notre mission est de transformer chaque kilogramme de déchet en une opportunité économique et écologique pour les foyers camerounais.
+                            {{ __("Welcome.Commitment Description") }}
                         </p>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-4">
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border-l-[6px] border-easygas-green group hover:-translate-y-1 transition-all duration-300">
-                                <p class="text-4xl font-black text-easygas-green group-hover:scale-105 transition-transform">10+ <span class="text-sm font-bold uppercase tracking-wider">Tonnes</span></p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Plastiques recyclés au Cameroun</p>
+                                <p class="text-4xl font-black text-easygas-green group-hover:scale-105 transition-transform">10+ <span class="text-sm font-bold uppercase tracking-wider">{{ __("Welcome.Tonnes") }}</span></p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">{{ __("Welcome.Plastic Recycled") }}</p>
                             </div>
                             <div class="bg-white dark:bg-gray-800 p-6 rounded-[2rem] shadow-xl border-l-[6px] border-amber-500 group hover:-translate-y-1 transition-all duration-300">
-                                <p class="text-4xl font-black text-amber-500 group-hover:scale-105 transition-transform">2,5k+ <span class="text-sm font-bold uppercase tracking-wider">Arbres</span></p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">Plantés grâce à vos commandes</p>
+                                <p class="text-4xl font-black text-amber-500 group-hover:scale-105 transition-transform">2,5k+ <span class="text-sm font-bold uppercase tracking-wider">{{ __("Welcome.Trees") }}</span></p>
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-2 font-medium">{{ __("Welcome.Trees Planted") }}</p>
                             </div>
                         </div>
                     </div>
@@ -202,8 +206,8 @@ onUnmounted(() => {
                         <img src="https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&h=1000&fit=crop" alt="Impact local" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]">
                         <div class="absolute inset-0 bg-gradient-to-t from-easygas-green/90 via-black/20 to-transparent flex items-end p-10">
                             <div class="text-white">
-                                <p class="font-black text-2xl flex items-center gap-3 italic"><Leaf :size="28" class="text-white" /> Impact Direct</p>
-                                <p class="text-lg text-white/90 mt-2 font-medium leading-relaxed">Avec chaque recharge EasyGas, vous réduisez votre empreinte carbone et soutenez l'économie circulaire locale.</p>
+                                <p class="font-black text-2xl flex items-center gap-3 italic"><Leaf :size="28" class="text-white" /> {{ __("Welcome.Direct Impact") }}</p>
+                                <p class="text-lg text-white/90 mt-2 font-medium leading-relaxed">{{ __("Welcome.Impact Description") }}</p>
                             </div>
                         </div>
                     </div>
@@ -217,17 +221,17 @@ onUnmounted(() => {
                <span class="text-[15rem] font-black rotate-12 tracking-tighter">EASYGAS</span>
             </div>
             <div class="relative max-w-4xl mx-auto">
-                <div class="inline-block px-5 py-2 bg-white/20 backdrop-blur-md rounded-full text-xs font-black tracking-widest uppercase mb-8">Rejoignez le mouvement</div>
-                <h2 class="text-5xl md:text-7xl font-black mb-8 italic tracking-tighter drop-shadow-xl">Prêt pour la révolution verte au Cameroun ?</h2>
-                <p class="text-xl text-green-50 mb-12 opacity-90 max-w-2xl mx-auto leading-relaxed">Commandez votre recharge de gaz dès maintenant et transformez votre gestion de déchets en gains concrets.</p>
+                <div class="inline-block px-5 py-2 bg-white/20 backdrop-blur-md rounded-full text-xs font-black tracking-widest uppercase mb-8">{{ __("Welcome.Join Movement") }}</div>
+                <h2 class="text-5xl md:text-7xl font-black mb-8 italic tracking-tighter drop-shadow-xl">{{ __("Welcome.Ready Title") }}</h2>
+                <p class="text-xl text-green-50 mb-12 opacity-90 max-w-2xl mx-auto leading-relaxed">{{ __("Welcome.Ready Description") }}</p>
                 <div class="flex flex-col sm:flex-row gap-6 justify-center">
                     <Link :href="route('register')" class="bg-white text-easygas-accent px-10 py-4 rounded-full font-black shadow-2xl hover:bg-gray-50 transition-all hover:scale-105 active:scale-95 flex items-center justify-center gap-3 text-lg">
                         <UserPlus :size="22" />
-                        Créer mon compte
+                        {{ __("Welcome.Create Account") }}
                     </Link>
                     <a href="mailto:contact@easygaz.cm" class="backdrop-blur-md border-2 border-white/50 text-white px-10 py-4 rounded-full font-bold hover:bg-white/10 transition-all flex items-center justify-center gap-3 text-lg active:scale-95">
                         <MessageCircle :size="22" />
-                        Nous contacter
+                        {{ __("Welcome.Contact Us") }}
                     </a>
                 </div>
             </div>
@@ -241,34 +245,34 @@ onUnmounted(() => {
                         <img src="/img/logo-easygas.png" alt="EasyGas Logo" class="w-16 h-16 object-contain" />
                         <span class="font-black text-3xl text-white tracking-tight">EasyGas</span>
                     </Link>
-                    <p class="text-sm leading-relaxed opacity-70">L'énergie du futur, ancrée dans nos racines. Biogaz pur et économie circulaire au service du Cameroun.</p>
+                    <p class="text-sm leading-relaxed opacity-70">{{ __("Footer.Description") }}</p>
                     <div class="flex gap-4 pt-2">
                        <a href="#" class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-easygas-green hover:text-white transition-all"><ChevronRight :size="20" /></a>
                        <a href="#" class="w-10 h-10 bg-gray-900 rounded-full flex items-center justify-center hover:bg-easygas-green hover:text-white transition-all"><ChevronRight :size="20" /></a>
                     </div>
                 </div>
                 <div>
-                    <h4 class="text-white font-black mb-8 text-xs uppercase tracking-[0.2em]">Services</h4>
+                    <h4 class="text-white font-black mb-8 text-xs uppercase tracking-[0.2em]">{{ __("Footer.Services") }}</h4>
                     <ul class="space-y-4 text-sm font-medium">
-                        <li><Link :href="route('order.create')" class="hover:text-easygas-green transition-colors">Livraison de Gaz</Link></li>
-                        <li><Link :href="route('waste.create')" class="hover:text-easygas-green transition-colors">Collecte de Déchets</Link></li>
-                        <li><Link :href="route('store')" class="hover:text-easygas-green transition-colors">Boutique Accessoires</Link></li>
+                        <li><Link :href="route('order.create')" class="hover:text-easygas-green transition-colors">{{ __("Footer.Gas Delivery") }}</Link></li>
+                        <li><Link :href="route('waste.create')" class="hover:text-easygas-green transition-colors">{{ __("Footer.Waste Collection") }}</Link></li>
+                        <li><Link :href="route('store')" class="hover:text-easygas-green transition-colors">{{ __("Footer.Accessories Shop") }}</Link></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-black mb-8 text-xs uppercase tracking-[0.2em]">Navigation</h4>
+                    <h4 class="text-white font-black mb-8 text-xs uppercase tracking-[0.2em]">{{ __("Footer.Navigation") }}</h4>
                     <ul class="space-y-4 text-sm font-medium">
-                        <li><a href="#decouvrir" class="hover:text-easygas-green transition-colors">À propos</a></li>
-                        <li><a href="#impact" class="hover:text-easygas-green transition-colors">Impact Écolo</a></li>
-                        <li><Link :href="route('login')" class="hover:text-easygas-green transition-colors">Mon Compte</Link></li>
+                        <li><a href="#decouvrir" class="hover:text-easygas-green transition-colors">{{ __("Footer.About") }}</a></li>
+                        <li><a href="#impact" class="hover:text-easygas-green transition-colors">{{ __("Footer.Eco Impact") }}</a></li>
+                        <li><Link :href="route('login')" class="hover:text-easygas-green transition-colors">{{ __("Footer.My Account") }}</Link></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="text-white font-black mb-8 text-xs uppercase tracking-[0.2em]">Contact Direct</h4>
+                    <h4 class="text-white font-black mb-8 text-xs uppercase tracking-[0.2em]">{{ __("Footer.Direct Contact") }}</h4>
                     <ul class="space-y-4 text-sm font-medium">
                         <li class="flex items-start gap-2">
                             <MapPin :size="16" class="text-easygas-green mt-1 shrink-0" />
-                            <span>Siège Social, Bafoussam<br/>Cameroun</span>
+                            <span>{{ __("Footer.Headquarters") }}<br/>{{ __("Footer.Cameroon") }}</span>
                         </li>
                         <li class="flex items-center gap-2">
                             <MessageCircle :size="16" class="text-easygas-green" />
@@ -278,10 +282,10 @@ onUnmounted(() => {
                 </div>
             </div>
             <div class="max-w-6xl mx-auto border-t border-gray-900 mt-20 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] font-bold uppercase tracking-widest opacity-40">
-                <span>© 2026 EasyGas Cameroun. Énergie durable.</span>
+                <span>{{ __("Footer.Copyright") }}</span>
                 <div class="flex gap-8">
-                    <a href="#" class="hover:text-white transition-colors">Confidentialité</a>
-                    <a href="#" class="hover:text-white transition-colors">Mentions Légales</a>
+                    <a href="#" class="hover:text-white transition-colors">{{ __("Footer.Privacy") }}</a>
+                    <a href="#" class="hover:text-white transition-colors">{{ __("Footer.Legal") }}</a>
                 </div>
             </div>
         </footer>

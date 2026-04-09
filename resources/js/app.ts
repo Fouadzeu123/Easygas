@@ -4,6 +4,7 @@ import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import { ZiggyVue } from 'ziggy-js';
 import { initializeTheme } from '@/composables/useAppearance';
+import { useTranslate } from './composables/useTranslate';
 import { Ziggy } from './ziggy';
 import '../css/app.css';
 
@@ -17,9 +18,15 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
+        const translate = useTranslate();
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(ZiggyVue, (Ziggy as any))
+            .mixin({
+                methods: {
+                    __: translate.__,
+                },
+            })
             .mount(el);
     },
     progress: {

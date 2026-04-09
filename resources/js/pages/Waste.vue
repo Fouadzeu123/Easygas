@@ -6,6 +6,9 @@ import AppButton from '@/components/AppButton.vue';
 import AppCard from '@/components/AppCard.vue';
 import AppInput from '@/components/AppInput.vue';
 import MobileLayout from '@/layouts/MobileLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
 
 const form = useForm({
     type:        'plastique',
@@ -56,14 +59,14 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Signaler des Déchets" />
+    <Head :title="__('Waste.Title')" />
 
-    <MobileLayout>
+    <MobileLayout :title="__('Waste.Title')">
         <div class="mb-6 animate-fade-in">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Trash2 class="text-easygas-green" /> Signaler Déchets
+                <Trash2 class="text-easygas-green" /> {{ __("Waste.Title") }}
             </h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Gagnez des points en protégeant la nature.</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">{{ __("Waste.Subtitle") }}</p>
         </div>
 
         <form @submit.prevent="submit" class="space-y-6 pb-24">
@@ -71,15 +74,15 @@ const submit = () => {
             <AppCard class="animate-slide-up" style="animation-delay: 0.1s">
                 <div class="grid gap-4">
                     <div class="grid gap-2">
-                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Type de déchets</label>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ __("Waste.Type Label") }}</label>
                         <select v-model="form.type" class="app-input text-gray-800 dark:text-gray-100">
-                            <option value="plastique">Plastique</option>
-                            <option value="verre">Verre</option>
-                            <option value="metal">Métal</option>
-                            <option value="papier">Papier / Carton</option>
-                            <option value="organique">Organique</option>
-                            <option value="electronique">Électronique</option>
-                            <option value="autre">Autre</option>
+                            <option value="plastique">{{ __("Waste.Types.plastic") }}</option>
+                            <option value="verre">{{ __("Waste.Types.glass") }}</option>
+                            <option value="metal">{{ __("Waste.Types.metal") }}</option>
+                            <option value="papier">{{ __("Waste.Types.paper") }}</option>
+                            <option value="organique">{{ __("Waste.Types.organic") }}</option>
+                            <option value="electronique">{{ __("Waste.Types.electronic") }}</option>
+                            <option value="autre">{{ __("Waste.Types.other") }}</option>
                         </select>
                     </div>
 
@@ -88,7 +91,7 @@ const submit = () => {
                             v-model="form.quantity as any"
                             type="number"
                             min="5"
-                            label="Quantité estimée (min. 5 kg)"
+                            :label="__('Waste.Quantity Label')"
                             placeholder="Ex: 5"
                             :error="form.errors.quantity"
                         />
@@ -98,7 +101,7 @@ const submit = () => {
             <!-- Photo -->
             <AppCard class="animate-slide-up" style="animation-delay: 0.2s">
                 <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
-                    <Camera class="w-5 h-5 text-easygas-green" /> Photo des déchets
+                    <Camera class="w-5 h-5 text-easygas-green" /> {{ __("Waste.Photo Title") }}
                 </h2>
 
                 <div
@@ -107,7 +110,7 @@ const submit = () => {
                 >
                     <template v-if="!photoPreview">
                         <Camera class="w-10 h-10 text-gray-300 dark:text-gray-600 mb-2" />
-                        <span class="text-xs text-gray-400">Prendre une photo ou choisir</span>
+                        <span class="text-xs text-gray-400">{{ __("Waste.Photo Placeholder") }}</span>
                     </template>
                     <img v-else :src="photoPreview" class="w-full h-full object-cover" />
                 </div>
@@ -118,31 +121,31 @@ const submit = () => {
             <!-- Localisation & Description -->
             <AppCard class="animate-slide-up" style="animation-delay: 0.3s">
                 <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
-                    <MapPin class="w-5 h-5 text-red-500" /> Lieu de collecte
+                    <MapPin class="w-5 h-5 text-red-500" /> {{ __("Waste.Location Title") }}
                 </h2>
 
                 <div v-if="form.latitude" class="flex items-center gap-2 text-xs text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-xl border border-green-200 dark:border-green-800 mb-4">
                     <Navigation class="w-4 h-4 flex-shrink-0" />
-                    <span>Ma position GPS est enregistrée ({{ form.latitude.toFixed(4) }})</span>
+                    <span>{{ __("Waste.GPS Saved", { lat: form.latitude.toFixed(4) }) }}</span>
                 </div>
                 <button v-else type="button" @click="getLocation" class="text-sm text-easygas-green font-semibold flex items-center gap-1.5 hover:underline mb-4">
-                    <MapPin class="w-4 h-4" /> Récupérer ma position GPS
+                    <MapPin class="w-4 h-4" /> {{ __("Order.Get GPS") }}
                 </button>
 
                 <textarea
                     v-model="form.description"
-                    placeholder="Précisez l'endroit exact ou ajoutez un commentaire..."
+                    :placeholder="__('Waste.Description Placeholder')"
                     class="app-input h-24 resize-none text-sm text-gray-800 dark:text-gray-100"
                 ></textarea>
             </AppCard>
 
             <AppButton type="submit" :loading="form.processing" class="animate-slide-up w-full" style="animation-delay: 0.4s">
-                Envoyer le signalement
+                {{ __("Waste.Submit") }}
             </AppButton>
 
             <div class="flex items-start gap-2 p-4 bg-green-50 dark:bg-green-900/20 rounded-2xl border border-green-100 dark:border-green-800 animate-slide-up" style="animation-delay: 0.5s">
                 <Info class="w-5 h-5 flex-shrink-0 text-green-600 dark:text-green-400 mt-0.5" />
-                <p class="text-xs text-green-700 dark:text-green-300">Vos points seront validés une fois que le collecteur aura pesé vos déchets sur place.</p>
+                <p class="text-xs text-green-700 dark:text-green-300">{{ __("Waste.Points Info") }}</p>
             </div>
         </form>
     </MobileLayout>

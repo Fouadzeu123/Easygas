@@ -2,6 +2,7 @@
 import { Head, useForm, Link } from '@inertiajs/vue3';
 import { ref, onMounted } from 'vue';
 import MobileLayout from '@/layouts/MobileLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
 import { 
     Package, 
     TrendingUp, 
@@ -13,6 +14,8 @@ import {
     Wallet,
     Award
 } from 'lucide-vue-next';
+
+const { __ } = useTranslate();
 
 const props = defineProps<{
     role: string;
@@ -84,7 +87,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <Head :title="role === 'ramasseur' ? 'Dashboard Ramasseur' : 'Dashboard Livreur'" />
+    <Head :title="role === 'ramasseur' ? __('Collector.Dashboard.Title Collector') : __('Collector.Dashboard.Title Delivery')" />
 
     <MobileLayout>
         <!-- Header with Status Toggle -->
@@ -98,7 +101,7 @@ onMounted(() => {
                     </div>
                     <div>
                         <p class="text-xs font-black text-white/50 uppercase tracking-widest leading-none mb-1">PRO SERVICE</p>
-                        <h1 class="text-2xl font-black text-white leading-tight">Bonjour, {{ auth.user.name.split(' ')[0] }}</h1>
+                        <h1 class="text-2xl font-black text-white leading-tight">{{ __("Collector.Dashboard.Hello") }}, {{ auth.user.name.split(' ')[0] }}</h1>
                     </div>
                 </div>
                 
@@ -121,7 +124,7 @@ onMounted(() => {
                         <Wallet class="w-6 h-6 text-orange-500" />
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Gains du jour</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ __("Collector.Dashboard.Daily Gains") }}</p>
                         <p class="text-xl font-black text-gray-900 dark:text-white">{{ stats.gains?.toLocaleString() || 0 }} <span class="text-xs font-medium opacity-50">CFA</span></p>
                     </div>
                 </div>
@@ -131,7 +134,7 @@ onMounted(() => {
                         <Award class="w-6 h-6 text-blue-500" />
                     </div>
                     <div>
-                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Points Fidélité</p>
+                        <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ __("Collector.Dashboard.Loyalty Points") }}</p>
                         <p class="text-xl font-black text-gray-900 dark:text-white">{{ auth.user.points || 0 }}</p>
                     </div>
                 </div>
@@ -144,17 +147,17 @@ onMounted(() => {
                     <Power class="w-6 h-6 text-white" />
                 </div>
                 <div>
-                    <h3 class="font-bold text-amber-900 dark:text-amber-200">Vous êtes hors ligne</h3>
-                    <p class="text-xs text-amber-700 dark:text-amber-400">Passez en ligne pour recevoir de nouvelles missions à proximité.</p>
+                    <h3 class="font-bold text-amber-900 dark:text-amber-200">{{ __("Collector.Dashboard.Offline Title") }}</h3>
+                    <p class="text-xs text-amber-700 dark:text-amber-400">{{ __("Collector.Dashboard.Offline Desc") }}</p>
                 </div>
             </div>
 
             <!-- Summary section -->
             <section class="space-y-4">
                 <div class="flex justify-between items-center">
-                    <h2 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Statistiques globales</h2>
+                    <h2 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">{{ __("Collector.Dashboard.Global Stats") }}</h2>
                     <span class="text-xs font-bold text-easygas-green bg-easygas-green/10 px-3 py-1 rounded-full flex items-center gap-1">
-                        <TrendingUp class="w-3 h-3" /> +12% vs hier
+                        <TrendingUp class="w-3 h-3" /> {{ __("Collector.Dashboard.vs Yesterday", { percent: 12 }) }}
                     </span>
                 </div>
                 
@@ -165,7 +168,7 @@ onMounted(() => {
                         </div>
                         <div>
                             <p class="text-2xl font-black text-gray-900 dark:text-white">{{ role === 'ramasseur' ? stats.total_collectes : stats.total_livraisons }}</p>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ role === 'ramasseur' ? 'Collectes Terminées' : 'Livraisons Faites' }}</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ role === 'ramasseur' ? __('Collector.Dashboard.Collections Completed') : __('Collector.Dashboard.Deliveries Completed') }}</p>
                         </div>
                     </div>
                     
@@ -176,7 +179,7 @@ onMounted(() => {
                         <div>
                             <p v-if="role === 'ramasseur'" class="text-2xl font-black text-gray-900 dark:text-white">{{ stats.total_kg || 0 }} <span class="text-xs font-bold">KG</span></p>
                             <p v-else class="text-2xl font-black text-gray-900 dark:text-white">4.8 <span class="text-xs font-bold">/ 5</span></p>
-                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ role === 'ramasseur' ? 'Volume Collecté' : 'Note Moyenne' }}</p>
+                            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ role === 'ramasseur' ? __('Collector.Dashboard.Volume Collected') : __('Collector.Dashboard.Average Rating') }}</p>
                         </div>
                     </div>
                 </div>
@@ -184,34 +187,34 @@ onMounted(() => {
 
             <!-- Quick Actions -->
             <section class="space-y-4">
-                <h2 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">Accès Rapide</h2>
+                <h2 class="text-lg font-black text-gray-900 dark:text-white uppercase tracking-tight">{{ __("Collector.Dashboard.Quick Access") }}</h2>
                 <div class="grid grid-cols-3 gap-4">
                     <Link :href="route('collector.missions')" class="flex flex-col items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:translate-y-[-2px] transition-all">
                         <div class="w-12 h-12 bg-easygas-green/10 rounded-2xl flex items-center justify-center">
                             <Navigation class="w-6 h-6 text-easygas-green" />
                         </div>
-                        <span class="text-[10px] font-black uppercase text-gray-500 text-center tracking-tighter">Missions</span>
+                        <span class="text-[10px] font-black uppercase text-gray-500 text-center tracking-tighter">{{ __("Collector.Dashboard.Missions") }}</span>
                     </Link>
                     
                     <Link :href="route('collector.map')" class="flex flex-col items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:translate-y-[-2px] transition-all">
                         <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center">
                             <MapPin class="w-6 h-6 text-blue-500" />
                         </div>
-                        <span class="text-[10px] font-black uppercase text-gray-500 text-center tracking-tighter">Carte</span>
+                        <span class="text-[10px] font-black uppercase text-gray-500 text-center tracking-tighter">{{ __("Collector.Dashboard.Map") }}</span>
                     </Link>
                     
                     <Link :href="route('activity')" class="flex flex-col items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-3xl border border-gray-100 dark:border-gray-700 shadow-sm hover:translate-y-[-2px] transition-all">
                         <div class="w-12 h-12 bg-orange-50 dark:bg-orange-900/20 rounded-2xl flex items-center justify-center">
                             <History class="w-6 h-6 text-orange-500" />
                         </div>
-                        <span class="text-[10px] font-black uppercase text-gray-500 text-center tracking-tighter">Historique</span>
+                        <span class="text-[10px] font-black uppercase text-gray-500 text-center tracking-tighter">{{ __("Collector.Dashboard.History") }}</span>
                     </Link>
                 </div>
             </section>
 
             <!-- Bottom Note -->
             <div class="text-center">
-                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">EasyGas S.A. &copy; 2026 - Version 2.0</p>
+                <p class="text-[10px] text-gray-400 font-bold uppercase tracking-[0.2em]">EasyGas S.A. &copy; 2026 - {{ __("Nav.Console") }}</p>
             </div>
         </div>
     </MobileLayout>

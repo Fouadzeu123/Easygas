@@ -18,8 +18,8 @@ class OrderController extends Controller
         $gasPricePerKg = $prices ? $prices->gas_price_per_kg : 640; // Default or DB
 
         $sizes = [
-            ['label' => 'Petite Bouteille',  'quantity' => 6,    'price' => ceil(6 * $gasPricePerKg)],
-            ['label' => 'Grande Bouteille', 'quantity' => 12.5, 'price' => ceil(12.5 * $gasPricePerKg)],
+            ['label' => __('Order.Small Bottle'),  'quantity' => 6,    'price' => ceil(6 * $gasPricePerKg)],
+            ['label' => __('Order.Large Bottle'), 'quantity' => 12.5, 'price' => ceil(12.5 * $gasPricePerKg)],
         ];
 
         return Inertia::render('Order', [

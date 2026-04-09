@@ -29,21 +29,21 @@ class DashboardController extends Controller
 
         $stats = [
             [
-                'label' => 'Gaz Commandé',
+                'label' => __('Stats.Gas Ordered'),
                 'value' => round($gasOrdered, 1) . ' kg',
                 'icon'  => 'Flame',
                 'color' => 'text-orange-500',
                 'bg'    => 'bg-orange-100',
             ],
             [
-                'label' => 'Déchets Triés',
+                'label' => __('Stats.Waste Sorted'),
                 'value' => round($wasteSorted, 1) . ' kg',
                 'icon'  => 'Trash2',
                 'color' => 'text-blue-500',
                 'bg'    => 'bg-blue-100',
             ],
             [
-                'label' => 'CO2 Économisé',
+                'label' => __('Stats.CO2 Saved'),
                 'value' => round($co2Saved, 1) . ' kg',
                 'icon'  => 'Leaf',
                 'color' => 'text-green-500',
@@ -59,16 +59,16 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($order) {
                 $statusLabels = [
-                    'en_attente'   => 'En attente',
-                    'confirme'     => 'Confirmée',
-                    'en_livraison' => 'En livraison',
+                    'en_attente'   => __('Status.Pending'),
+                    'confirme'     => __('Status.Confirmed'),
+                    'en_livraison' => __('Status.Delivering'),
                 ];
                 return [
                     'id'     => $order->id,
-                    'type'   => 'Gaz (' . $order->quantity . 'kg)',
+                    'type'   => __('Order.Gas', ['quantity' => $order->quantity]),
                     'status' => $statusLabels[$order->status] ?? $order->status,
                     'time'   => $order->updated_at->format('H:i'),
-                    'driver' => $order->collector ? $order->collector->name : 'Non assigné',
+                    'driver' => $order->collector ? $order->collector->name : __('Order.Unassigned'),
                 ];
             });
 

@@ -2,7 +2,9 @@
 import { computed } from 'vue';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Home, Gift, History, User, PlusCircle, ShieldAlert, Map as MapIcon, Users, DollarSign } from 'lucide-vue-next';
+import { useTranslate } from '@/composables/useTranslate';
 
+const { __ } = useTranslate();
 const page = usePage();
 const currentUser = computed(() => (page.props.auth as any)?.user);
 const role = computed(() => currentUser.value?.role || 'client');
@@ -33,28 +35,28 @@ const isCurrentRoute = (name: string) => {
 const navItems = computed(() => {
     if (role.value === 'admin') {
         return [
-            { name: 'admin.dashboard', label: 'Console', icon: ShieldAlert },
-            { name: 'admin.activity',  label: 'Activité', icon: History },
-            { name: 'admin.users',     label: 'Membres', icon: Users },
-            { name: 'admin.prices',    label: 'Tarifs', icon: DollarSign },
+            { name: 'admin.dashboard', label: __('Nav.Console'), icon: ShieldAlert },
+            { name: 'admin.activity',  label: __('Nav.Activity'), icon: History },
+            { name: 'admin.users',     label: __('Nav.Members'), icon: Users },
+            { name: 'admin.prices',    label: __('Nav.Rates'), icon: DollarSign },
         ];
     }
     
     if (role.value === 'ramasseur' || role.value === 'livreur') {
         return [
-            { name: 'collector.dashboard', label: 'Dashboard', icon: Home },
-            { name: 'collector.missions',  label: 'Missions',  icon: Gift },
-            { name: 'collector.map',       label: 'Carte',     icon: MapIcon },
-            { name: 'profile',             label: 'Profil',    icon: User },
+            { name: 'collector.dashboard', label: __('Nav.Dashboard'), icon: Home },
+            { name: 'collector.missions',  label: __('Nav.Missions'),  icon: Gift },
+            { name: 'collector.map',       label: __('Nav.Map'),     icon: MapIcon },
+            { name: 'profile',             label: __('Nav.Profile'),    icon: User },
         ];
     }
 
     // fallback / client
     return [
-        { name: 'dashboard',     label: 'Accueil',     icon: Home },
-        { name: 'rewards.index', label: 'Récompenses', icon: Gift },
-        { name: 'activity',      label: 'Historique',  icon: History },
-        { name: 'profile',       label: 'Profil',      icon: User },
+        { name: 'dashboard',     label: __('Nav.Home'),     icon: Home },
+        { name: 'rewards.index', label: __('Nav.Rewards'), icon: Gift },
+        { name: 'activity',      label: __('Nav.History'),  icon: History },
+        { name: 'profile',       label: __('Nav.Profile'),      icon: User },
     ];
 });
 </script>
@@ -98,7 +100,7 @@ const navItems = computed(() => {
                         <div class="bg-gradient-to-br from-easygas-green to-easygas-green-dark p-3.5 rounded-2xl shadow-lg shadow-easygas-green/30 group-active:scale-90 transition-transform border-4 border-white dark:border-gray-900">
                             <PlusCircle :size="26" class="text-white" />
                         </div>
-                        <span class="text-[9px] font-bold text-easygas-green mt-0.5">Commander</span>
+                        <span class="text-[9px] font-bold text-easygas-green mt-0.5">{{ __('Nav.Order') }}</span>
                     </Link>
                 </div>
 

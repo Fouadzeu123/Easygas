@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
-import { Bell, LogIn, Moon, Search, Sun, User, History } from 'lucide-vue-next';
+import { Bell, LogIn, Moon, Search, Sun, User, History, Languages } from 'lucide-vue-next';
 import { computed } from 'vue';
 import { useAppearance } from '@/composables/useAppearance';
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
 
 const page = usePage();
 const user = computed(() => (page.props.auth as any)?.user);
@@ -24,6 +27,8 @@ const route = (name?: string, params?: any) => {
 
     return '#';
 };
+
+const currentLocale = computed(() => page.props.locale as string);
 
 const toggleAppearance = () => {
     updateAppearance(appearance.value === 'dark' ? 'light' : 'dark');
@@ -69,28 +74,38 @@ defineProps<{
             </div>
 
             <div class="flex items-center gap-2 flex-shrink-0">
+                <!-- Language Switcher -->
+                <Link 
+                    :href="route('language.switch', { locale: currentLocale === 'en' ? 'fr' : 'en' })"
+                    class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none flex items-center gap-1.5"
+                    :title="__('Common.Switch Language')"
+                >
+                    <Languages :size="20" class="text-gray-600 dark:text-gray-400" />
+                    <span class="text-xs font-bold text-gray-600 dark:text-gray-400 uppercase">{{ currentLocale }}</span>
+                </Link>
+
                 <!-- Theme Toggle -->
-                <button @click="toggleAppearance" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none" title="Changer de thème">
+                <button @click="toggleAppearance" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none" :title="__('Common.Theme Toggle')">
                     <Sun v-if="appearance === 'dark'" :size="20" class="text-yellow-400" />
                     <Moon v-else :size="20" class="text-gray-600 dark:text-gray-400" />
                 </button>
 
                 <!-- Auth Buttons for Guests -->
                 <template v-if="!user">
-                    <Link :href="route('login')" class="flex items-center p-2 text-gray-700 dark:text-gray-200 hover:text-easygas-green transition-colors focus:outline-none" aria-label="Connexion">
+                    <Link :href="route('login')" class="flex items-center p-2 text-gray-700 dark:text-gray-200 hover:text-easygas-green transition-colors focus:outline-none" :aria-label="__('Common.Login')">
                         <LogIn :size="20" />
                     </Link>
                 </template>
 
                 <!-- Icons for Authenticated Users -->
                 <template v-else>
-                    <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors relative focus:outline-none">
+                    <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors relative focus:outline-none" :aria-label="__('Common.Notifications')">
                         <Bell :size="20" class="text-gray-600 dark:text-gray-400" />
                         <span class="absolute top-2.5 right-2 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-gray-900 animate-pulse"></span>
                     </button>
                     
                     <!-- Historique (replaced Profile) -->
-                    <Link :href="route('activity')" class="ml-1 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none" aria-label="Historique">
+                    <Link :href="route('activity')" class="ml-1 p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors focus:outline-none" :aria-label="__('Common.History')">
                         <History :size="20" class="text-gray-600 dark:text-gray-400" />
                     </Link>
                 </template>

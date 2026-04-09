@@ -6,6 +6,9 @@ import AppButton from '@/components/AppButton.vue';
 import AppCard from '@/components/AppCard.vue';
 import AppInput from '@/components/AppInput.vue';
 import MobileLayout from '@/layouts/MobileLayout.vue';
+import { useTranslate } from '@/composables/useTranslate';
+
+const { __ } = useTranslate();
 
 const props = defineProps<{
     userPoints: number;
@@ -67,20 +70,20 @@ const submit = () => {
 </script>
 
 <template>
-    <Head title="Commander du Gaz" />
+    <Head :title="__('Order.Title')" />
 
-    <MobileLayout>
+    <MobileLayout :title="__('Order.Title')">
         <div class="mb-6 animate-fade-in">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                <Flame class="text-easygas-green" /> Commander du Gaz
+                <Flame class="text-easygas-green" /> {{ __("Order.Title") }}
             </h1>
-            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">Biogaz pur et écologique livré chez vous.</p>
+            <p class="text-gray-500 dark:text-gray-400 text-sm mt-1">{{ __("Order.Subtitle") }}</p>
         </div>
 
         <form @submit.prevent="submit" class="space-y-6 pb-24">
             <!-- Sélection de bouteille -->
             <AppCard class="animate-slide-up" style="animation-delay: 0.1s">
-                <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-4">Choisir votre bouteille</h2>
+                <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-4">{{ __("Order.Choose Bottle") }}</h2>
 
                 <div class="grid grid-cols-2 gap-3">
                     <button
@@ -106,14 +109,14 @@ const submit = () => {
             <!-- Localisation -->
             <AppCard class="animate-slide-up" style="animation-delay: 0.2s">
                 <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-4 flex items-center gap-2">
-                    <MapPin class="w-5 h-5 text-red-500" /> Lieu de livraison
+                    <MapPin class="w-5 h-5 text-red-500" /> {{ __("Order.Delivery Place") }}
                 </h2>
 
                 <AppInput
                     id="address"
                     v-model="form.address"
-                    label="Adresse ou repères"
-                    placeholder="Ex: Rue 12, à côté de la pharmacie"
+                    :label="__('Order.Address Label')"
+                    :placeholder="__('Order.Address Placeholder')"
                     :error="form.errors.address"
                     required
                     class="mb-4"
@@ -121,20 +124,20 @@ const submit = () => {
 
                 <div v-if="form.latitude" class="flex items-center gap-2 text-xs text-green-700 dark:text-green-400 bg-green-50 dark:bg-green-900/20 p-3 rounded-xl border border-green-200 dark:border-green-800">
                     <Navigation class="w-4 h-4 flex-shrink-0" />
-                    Position GPS verrouillée ({{ form.latitude.toFixed(4) }}, {{ form.longitude?.toFixed(4) }})
+                    {{ __("Order.GPS Lock", { lat: form.latitude.toFixed(4), lng: form.longitude?.toFixed(4) ?? '' }) }}
                 </div>
                 <button v-else type="button" @click="getLocation" class="text-sm text-easygas-green font-semibold flex items-center gap-1.5 hover:underline">
                     <MapPin class="w-4 h-4" />
-                    Récupérer ma position GPS
+                    {{ __("Order.Get GPS") }}
                 </button>
             </AppCard>
 
             <!-- Notes optionnelles -->
             <AppCard class="animate-slide-up" style="animation-delay: 0.25s">
-                <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-3">Instructions (optionnel)</h2>
+                <h2 class="font-bold text-gray-800 dark:text-gray-100 mb-3">{{ __("Order.Instructions") }}</h2>
                 <textarea
                     v-model="form.notes"
-                    placeholder="Ex: Appeler avant d'arriver, code portail..."
+                    :placeholder="__('Order.Notes Placeholder')"
                     class="app-input h-20 resize-none text-sm text-gray-800 dark:text-gray-100"
                 ></textarea>
             </AppCard>
@@ -148,8 +151,8 @@ const submit = () => {
                             <Award class="w-5 h-5 text-yellow-500" />
                         </div>
                         <div>
-                            <p class="text-sm font-bold text-gray-800 dark:text-gray-100">Utiliser mes points</p>
-                            <p class="text-[11px] text-gray-500 dark:text-gray-400">{{ userPoints }} pts = {{ (userPoints * 10).toLocaleString() }} FCFA</p>
+                            <p class="text-sm font-bold text-gray-800 dark:text-gray-100">{{ __("Order.Use Points") }}</p>
+                            <p class="text-[11px] text-gray-500 dark:text-gray-400">{{ __("Order.Points Value", { points: userPoints.toString(), value: (userPoints * 10).toLocaleString() }) }}</p>
                         </div>
                     </div>
                     <label class="relative cursor-pointer">
@@ -161,32 +164,32 @@ const submit = () => {
 
                 <div class="space-y-2">
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-500 dark:text-gray-400">Sous-total</span>
+                        <span class="text-gray-500 dark:text-gray-400">{{ __("Order.Subtotal") }}</span>
                         <span class="font-medium text-gray-800 dark:text-gray-100">{{ totalPrice.toLocaleString() }} FCFA</span>
                     </div>
                     <div v-if="discount > 0" class="flex justify-between text-sm text-green-600 dark:text-green-400">
-                        <span>Réduction points</span>
+                        <span>{{ __("Order.Discount") }}</span>
                         <span class="font-medium">- {{ discount.toLocaleString() }} FCFA</span>
                     </div>
                     <div class="flex justify-between text-sm">
-                        <span class="text-gray-500 dark:text-gray-400">Livraison</span>
-                        <span class="text-easygas-green font-bold">GRATUIT</span>
+                        <span class="text-gray-500 dark:text-gray-400">{{ __("Footer.Gas Delivery") }}</span>
+                        <span class="text-easygas-green font-bold uppercase">{{ __("Order.Delivery Free") }}</span>
                     </div>
                 </div>
 
                 <div class="border-t border-gray-100 dark:border-gray-700 pt-4 mt-4 flex justify-between items-center">
-                    <span class="text-lg font-bold text-gray-800 dark:text-white">TOTAL</span>
+                    <span class="text-lg font-bold text-gray-800 dark:text-white">{{ __("Order.Total") }}</span>
                     <span class="text-2xl font-black text-easygas-green">{{ finalPrice.toLocaleString() }} FCFA</span>
                 </div>
             </div>
 
             <AppButton type="submit" :loading="form.processing" class="animate-slide-up w-full" style="animation-delay: 0.4s">
-                Confirmer ma commande
+                {{ __("Order.Confirm") }}
             </AppButton>
 
             <div class="flex items-start gap-2 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-2xl border border-blue-100 dark:border-blue-800">
                 <Info class="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-                <p class="text-xs text-blue-700 dark:text-blue-300">Le paiement s'effectue à la livraison par Cash ou Mobile Money auprès du livreur.</p>
+                <p class="text-xs text-blue-700 dark:text-blue-300">{{ __("Order.Payment Info") }}</p>
             </div>
         </form>
     </MobileLayout>
